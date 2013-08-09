@@ -1,0 +1,1 @@
+/* Show a list of the last 2-5 recently edited pages in the pages menu */

@@ -1,0 +1,12 @@
+.mrp-recent-pages-header {
+	border-bottom: 1px solid rgba(0,0,0,0.05);
+	color: #888;
+	font-size: 11px;
+	margin: 5px 0 !important;
+	padding: 7px 15px 4px 11px !important;
+}
+.mp6 .mrp-recent-pages-header {
+	border-bottom: 1px solid rgba(255,255,255,0.1);
+	color: rgba(255,255,255,0.8);
+}
+.mrp-recent-page {}
