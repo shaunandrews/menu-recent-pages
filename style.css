@@ -1,12 +1,28 @@
 .mrp-recent-pages-header {
-	border-bottom: 1px solid rgba(0,0,0,0.05);
 	color: #888;
 	font-size: 11px;
-	margin: 5px 0 !important;
-	padding: 7px 15px 4px 11px !important;
+	margin: 5px 0 0 0 !important;
+	padding: 7px 15px 4px 14px !important;
+	background: rgba(0,0,0,0.05);
+	border-top: 1px solid rgba(0,0,0,0.1);
 }
+.wp-menu-open .mrp-recent-pages-header {
+	padding-left: 12px !important;
+}
+.mrp-recent-page {
+	background: rgba(0,0,0,0.05);
+}
+#adminmenu .wp-submenu .mrp-recent-page a {
+	line-height: 1.4;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
 .mp6 .mrp-recent-pages-header {
-	border-bottom: 1px solid rgba(255,255,255,0.1);
-	color: rgba(255,255,255,0.8);
+	color: rgba(255,255,255,0.3);
+	background: rgba(0,0,0,0.2);
+	border-top: 1px solid rgba(0,0,0,0.3);
 }
-.mrp-recent-page {}
+.mp6 .mrp-recent-page {
+	background: rgba(0,0,0,0.2);
+}

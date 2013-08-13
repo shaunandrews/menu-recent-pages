@@ -47,15 +47,17 @@ function mrp_add_recent_pages() {
     } ?>
 		<script type="text/javascript">
 			(function($) {
-				$( '#menu-pages .wp-submenu' ).append('<li class="mrp-recent-pages-header">Recent Pages</li>');
+				$( '#menu-pages .wp-submenu' ).append('<li class="mrp-recent-pages-header">Recently Updated</li>');
 			})(jQuery);
 		</script>
 	<?php
 
-	foreach ($page_list as $page) { ?>
+	foreach ($page_list as $page) {
+	    $time_since = strtotime( $page->post_modified );
+    	$time_since = human_time_diff( $time_since, time() ); ?>
 		<script type="text/javascript">
 			(function($) {
-				$( '#menu-pages .wp-submenu' ).append('<li class="mrp-recent-page"><a href="<?php echo admin_url( "post.php?post={$page->ID}&action=edit" ); ?>"><?php echo esc_html( $page->post_title ); ?></a></li>');
+				$( '#menu-pages .wp-submenu' ).append('<li class="mrp-recent-page"><a title="Updated about <?php echo $time_since; ?> ago" href="<?php echo admin_url( "post.php?post={$page->ID}&action=edit" ); ?>"><?php echo esc_html( $page->post_title ); ?></a></li>');
 			})(jQuery);
 		</script>
 	<?php
