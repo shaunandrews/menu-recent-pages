@@ -23,7 +23,7 @@ function mrp_add_wp_admin_style() {
 
 add_action( 'admin_footer', 'mrp_add_recent_pages' );
 function mrp_add_recent_pages() {
-    GLOBAL $wpdb;
+    global $wpdb;
 
 	$post_types = get_post_types( array(
 		'show_ui' => true
@@ -51,7 +51,7 @@ function mrp_add_recent_pages() {
 			LIMIT %d
 		", $post_type, $no_of_pages );
 
-	    $page_list = (array) $wpdb->get_results($sql);
+	    $page_list = (array) $wpdb->get_results( $sql );
 
 	    if ( empty( $page_list ) )
 	    	continue;
@@ -62,15 +62,15 @@ function mrp_add_recent_pages() {
 		    $time_since = strtotime( $page->post_modified );
 	    	$time_since = human_time_diff( $time_since, time() );
 	    	$ago = sprintf( __( 'Updated about %s ago', 'menu-recent-pages' ), $time_since );
-			$append .= '<li class="mrp-recent-page"><a title="' . esc_attr( $ago ) . '" href="' . admin_url( "post.php?post={$page->ID}&action=edit" ) . '">' . esc_html( $page->post_title ) . '</a></li>';
+			$append .= '<li class="mrp-recent-page"><a title="' . esc_attr( $ago ) . '" href="' . get_edit_post_link( $page->ID ) . '">' . esc_html( $page->post_title ) . '</a></li>';
 		}
 
 	    ?>
-			<script type="text/javascript">
-				(function($) {
-					$( '#menu-<?php echo esc_attr( $slug ); ?> .wp-submenu' ).append( '<?php echo $append; ?>' );
-				})(jQuery);
-			</script>
+		<script type="text/javascript">
+			(function($) {
+				$( '#menu-<?php echo esc_attr( $slug ); ?> .wp-submenu' ).append( '<?php echo $append; ?>' );
+			})(jQuery);
+		</script>
 		<?php
 
 	}
@@ -78,7 +78,6 @@ function mrp_add_recent_pages() {
 
 function mrp_add_support() {
 	add_post_type_support( 'page', 'recent_menu' );
-	add_post_type_support( 'post', 'recent_menu' );
 }
 
 add_action( 'init', 'mrp_add_support' );
