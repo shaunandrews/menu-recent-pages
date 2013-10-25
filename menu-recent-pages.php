@@ -23,31 +23,41 @@ add_action( 'admin_footer', 'mrp_add_recent_pages' );
 function mrp_add_recent_pages() {
     GLOBAL $wpdb;
 
-	$no_of_pages = 5;
-	$include_posts = false;
+	$post_types = get_post_types( array(
+		'show_ui' => true
+	), 'objects' );
 
-    if ($include_posts == 1) {
-        $post_types      = "post_type IN ('page', 'post')";
-    } else {
-        $post_types      = "post_type = 'page'";
-    }
-    $sql = "SELECT ID, post_title, post_modified FROM
-	       {$wpdb->posts} WHERE
-	       post_status = 'publish' AND
-	       {$post_types}
-	       ORDER BY post_modified DESC
-	       LIMIT {$no_of_pages}";
+	$no_of_pages = 5;
+
+	foreach ( $post_types as $post_type => $pto ) {
+	if ( ! post_type_supports( $post_type, 'recent_menu' ) )
+		continue;
+
+	if ( 'page' == $post_type )
+		$slug = 'pages';
+	else if ( 'post' == $post_type )
+		$slug = 'posts';
+	else
+		$slug = sprintf( 'posts-%s', $post_type );
+
+    $sql = $wpdb->prepare( "
+		SELECT ID, post_title, post_modified
+		FROM {$wpdb->posts}
+		WHERE post_status = 'publish'
+		AND post_type = %s
+		ORDER BY post_modified DESC
+		LIMIT %d
+	", $post_type, $no_of_pages );
 
     $page_list = (array) $wpdb->get_results($sql);
 
-    if (!empty($list)) {
-        foreach ($list as $key => $val) {
-            $val->uri = get_permalink($val->ID);
-        }
-    } ?>
+    if ( empty( $page_list ) )
+    	continue;
+
+    ?>
 		<script type="text/javascript">
 			(function($) {
-				$( '#menu-pages .wp-submenu' ).append('<li class="mrp-recent-pages-header">Recently Updated</li>');
+				$( '#menu-<?php echo esc_attr( $slug ); ?> .wp-submenu' ).append('<li class="mrp-recent-pages-header">Recently Updated</li>');
 			})(jQuery);
 		</script>
 	<?php
@@ -57,9 +67,16 @@ function mrp_add_recent_pages() {
     	$time_since = human_time_diff( $time_since, time() ); ?>
 		<script type="text/javascript">
 			(function($) {
-				$( '#menu-pages .wp-submenu' ).append('<li class="mrp-recent-page"><a title="Updated about <?php echo $time_since; ?> ago" href="<?php echo admin_url( "post.php?post={$page->ID}&action=edit" ); ?>"><?php echo esc_html( $page->post_title ); ?></a></li>');
+				$( '#menu-<?php echo esc_attr( $slug ); ?> .wp-submenu' ).append('<li class="mrp-recent-page"><a title="Updated about <?php echo $time_since; ?> ago" href="<?php echo admin_url( "post.php?post={$page->ID}&action=edit" ); ?>"><?php echo esc_html( $page->post_title ); ?></a></li>');
 			})(jQuery);
 		</script>
 	<?php
 	}
+	}
 }
+
+function mrp_add_support() {
+	add_post_type_support( 'page', 'recent_menu' );
+}
+
+add_action( 'init', 'mrp_add_support' );
