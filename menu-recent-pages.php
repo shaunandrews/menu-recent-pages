@@ -54,29 +54,28 @@ function mrp_add_recent_pages() {
 	    if ( empty( $page_list ) )
 	    	continue;
 
+	    $append = '<li class="mrp-recent-pages-header">Recently Updated</li>';
+
+		foreach ($page_list as $page) {
+		    $time_since = strtotime( $page->post_modified );
+	    	$time_since = human_time_diff( $time_since, time() );
+			$append .= '<li class="mrp-recent-page"><a title="Updated about ' . $time_since . ' ago" href="' . admin_url( "post.php?post={$page->ID}&action=edit" ) . '">' . esc_html( $page->post_title ) . '</a></li>';
+		}
+
 	    ?>
 			<script type="text/javascript">
 				(function($) {
-					$( '#menu-<?php echo esc_attr( $slug ); ?> .wp-submenu' ).append('<li class="mrp-recent-pages-header">Recently Updated</li>');
+					$( '#menu-<?php echo esc_attr( $slug ); ?> .wp-submenu' ).append( '<?php echo $append; ?>' );
 				})(jQuery);
 			</script>
 		<?php
 
-		foreach ($page_list as $page) {
-		    $time_since = strtotime( $page->post_modified );
-	    	$time_since = human_time_diff( $time_since, time() ); ?>
-			<script type="text/javascript">
-				(function($) {
-					$( '#menu-<?php echo esc_attr( $slug ); ?> .wp-submenu' ).append('<li class="mrp-recent-page"><a title="Updated about <?php echo $time_since; ?> ago" href="<?php echo admin_url( "post.php?post={$page->ID}&action=edit" ); ?>"><?php echo esc_html( $page->post_title ); ?></a></li>');
-				})(jQuery);
-			</script>
-		<?php
-		}
 	}
 }
 
 function mrp_add_support() {
 	add_post_type_support( 'page', 'recent_menu' );
+	add_post_type_support( 'post', 'recent_menu' );
 }
 
 add_action( 'init', 'mrp_add_support' );
