@@ -8,6 +8,8 @@ Author: Shaun Andrews
 Author URI: http://automattic.com
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: menu-recent-pages
+Domain Path: /languages/
 
 Kudos: Based on code from Ehsanul Haque's (http://ehsanIs.me/) plugin, Recently Updated Pages (http://wordpress.org/plugins/recently-updated-pages/).
 
@@ -54,12 +56,13 @@ function mrp_add_recent_pages() {
 	    if ( empty( $page_list ) )
 	    	continue;
 
-	    $append = '<li class="mrp-recent-pages-header">Recently Updated</li>';
+	    $append = '<li class="mrp-recent-pages-header">' . __( 'Recently Updated', 'menu-recent-pages' ) . '</li>';
 
 		foreach ($page_list as $page) {
 		    $time_since = strtotime( $page->post_modified );
 	    	$time_since = human_time_diff( $time_since, time() );
-			$append .= '<li class="mrp-recent-page"><a title="Updated about ' . $time_since . ' ago" href="' . admin_url( "post.php?post={$page->ID}&action=edit" ) . '">' . esc_html( $page->post_title ) . '</a></li>';
+	    	$ago = sprintf( __( 'Updated about %s ago', 'menu-recent-pages' ), $time_since );
+			$append .= '<li class="mrp-recent-page"><a title="' . esc_attr( $ago ) . '" href="' . admin_url( "post.php?post={$page->ID}&action=edit" ) . '">' . esc_html( $page->post_title ) . '</a></li>';
 		}
 
 	    ?>
